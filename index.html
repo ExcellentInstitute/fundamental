@@ -142,6 +142,12 @@
         th, td { border: 1px solid var(--border); padding: 15px; text-align: left; }
         th { background-color: var(--secondary); color: white; font-weight: 600; }
         tr:nth-child(even) { background-color: var(--bg); }
+
+        /* Prevent images from being native-dragged */
+        img {
+            -webkit-user-drag: none;
+            user-select: none;
+        }
         
         .highlight-box {
             background: #fffbeb;
@@ -580,13 +586,23 @@
         let startY;
         let scrollTop;
 
+        // Prevent native browser image drag (which causes the "moving image" issue)
+        window.addEventListener('dragstart', (e) => {
+            if (e.target.tagName.toLowerCase() === 'img') {
+                e.preventDefault();
+            }
+        });
+
         // Apply drag functionality to the whole document window
         window.addEventListener('mousedown', (e) => {
-            // Prevent dragging if the user is clicking on interactive elements or highlighting text intentionally
             const targetTag = e.target.tagName.toLowerCase();
-            if(['a', 'button', 'img', 'code'].includes(targetTag) || e.target.closest('.no-print')) {
+            
+            // Allow dragging over images by removing 'img' from the ignore list 
+            // and explicitly bypassing the .no-print ignore for images.
+            if(['a', 'button', 'code'].includes(targetTag) || (e.target.closest('.no-print') && targetTag !== 'img')) {
                 return;
             }
+            
             isDown = true;
             // FIX: Use clientY instead of pageY to prevent recursive drag jumps
             startY = e.clientY;
