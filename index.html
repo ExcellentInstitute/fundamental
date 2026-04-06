@@ -18,34 +18,22 @@
         * { box-sizing: border-box; }
         
         /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 14px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg);
-        }
-        ::-webkit-scrollbar-thumb {
-            background-color: var(--accent);
-            border-radius: 10px;
-            border: 3px solid var(--bg);
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background-color: var(--primary);
-        }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background-color: var(--accent); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background-color: var(--primary); }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            /* Fluid typography: scales dynamically between mobile and projector screens */
             font-size: clamp(16px, 1.2vw, 22px); 
             line-height: 1.8;
             margin: 0;
             background-color: var(--bg);
             color: var(--dark);
-            cursor: grab; /* Indicates the page can be dragged */
+            cursor: grab; 
+            overflow-x: hidden;
         }
-        body:active {
-            cursor: grabbing;
-        }
+        body:active { cursor: grabbing; }
         
         /* Institute Watermark */
         .watermark {
@@ -59,47 +47,123 @@
             background-image: url('excellent institute logo.jpeg');
             background-size: cover;
             background-position: center;
-            border-radius: 50%; /* Converts the square image into a perfect circle */
-            opacity: 0.06; /* Faint enough to read text over it */
+            border-radius: 50%; 
+            opacity: 0.06; 
             pointer-events: none;
             z-index: -1;
             box-shadow: 0 0 50px rgba(0,0,0,0.1);
         }
 
+        /* Menu Toggle Button */
+        #menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1002;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: background 0.3s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #menu-btn:hover { background: #1d4ed8; transform: scale(1.05); }
+
+        /* Left Sidebar Navigation */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 280px;
+            height: 100vh;
+            background: white;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 90px 20px 20px;
+            gap: 12px;
+            z-index: 1001;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            cursor: default;
+        }
+        #sidebar.open { left: 0; }
+        
+        #sidebar a {
+            display: block;
+            padding: 12px 16px;
+            background: var(--light);
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            border-left: 4px solid transparent;
+            transition: all 0.2s ease;
+        }
+        #sidebar a:hover {
+            background: #e0e7ff;
+            border-left: 4px solid var(--accent);
+            color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        #close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--dark);
+            cursor: pointer;
+            line-height: 1;
+        }
+        #close-btn:hover { color: red; }
+
+        /* Mobile Overlay */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        #overlay.show { display: block; opacity: 1; }
+
+        /* Main Content Area */
+        #main-content {
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+        }
+
+        @media (min-width: 1024px) {
+            #sidebar.open ~ #main-content { margin-left: 280px; width: calc(100% - 280px); }
+            #overlay { display: none !important; }
+        }
+
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 4rem 10%;
+            padding: 5rem 10% 4rem;
             text-align: center;
             border-bottom: 5px solid var(--accent);
         }
         header h1 { margin: 0 0 1rem 0; font-size: 2.5rem; letter-spacing: 1px; }
         header p { font-size: 1.2rem; opacity: 0.9; max-width: 800px; margin: 0 auto; }
         
-        nav {
-            background: white;
-            padding: 1rem;
-            position: sticky;
-            top: 0;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            z-index: 1000;
-        }
-        nav a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 8px 16px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
-        nav a:hover { background: var(--accent); color: white; }
-        
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
         
         section {
             background: white;
@@ -107,7 +171,7 @@
             padding: 40px;
             margin-bottom: 40px;
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
-            scroll-margin-top: 100px;
+            scroll-margin-top: 40px;
             position: relative;
         }
         h2 { 
@@ -126,8 +190,8 @@
         li { margin-bottom: 10px; }
         .odia-text { color: #b45309; font-weight: 600; font-size: 0.95em; }
         
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
         
         .card { 
             background: var(--light); 
@@ -143,10 +207,18 @@
         th { background-color: var(--secondary); color: white; font-weight: 600; }
         tr:nth-child(even) { background-color: var(--bg); }
 
-        /* Prevent images from being native-dragged */
+        /* Prevent images from being native-dragged and style empty placeholders */
         img {
             -webkit-user-drag: none;
             user-select: none;
+            background-color: #e2e8f0;
+            min-height: 150px;
+            display: block;
+            width: 100%; 
+            height: auto; 
+            border-radius: 12px; 
+            margin: 30px 0; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         
         .highlight-box {
@@ -182,22 +254,18 @@
 
         /* Responsive Print & PDF Styling */
         @media print {
-            body { 
-                background-color: white; 
-                font-size: 12pt; 
-                color: black; 
-                cursor: default; 
-            }
+            body { background-color: white; font-size: 12pt; color: black; cursor: default; }
             .no-print { display: none !important; }
+            #main-content { margin-left: 0 !important; width: 100% !important; }
             .watermark {
-                opacity: 0.08 !important; /* Forces watermark to appear on paper/PDF */
+                opacity: 0.08 !important; 
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
             section { 
                 box-shadow: none; 
                 border: 1px solid #ddd; 
-                page-break-inside: avoid; /* Prevents awkward cuts halfway through a section */
+                page-break-inside: avoid; 
                 margin-bottom: 20px;
                 padding: 20px;
             }
@@ -215,16 +283,12 @@
 
 <div class="watermark"></div>
 
-<button class="print-btn no-print" onclick="window.print()">
-    🖨️ Print / Save PDF
-</button>
+<button id="menu-btn" class="no-print">☰ Menu</button>
 
-<header>
-    <h1>Computer Fundamentals Master Guide</h1>
-    <p>A comprehensive study of a commonly operated machine particularly used for Technology, Education, and Research.</p>
-</header>
+<div id="overlay" class="no-print"></div>
 
-<nav class="no-print">
+<nav id="sidebar" class="no-print">
+    <button id="close-btn">✖</button>
     <a href="#definition">1. Definition</a>
     <a href="#evolution">2. Evolution</a>
     <a href="#classification">3. Classification</a>
@@ -237,392 +301,412 @@
     <a href="#multimedia">10. Multimedia</a>
 </nav>
 
-<div class="container">
-    
-    <section id="definition">
-        <h2>1. Definition of a Computer</h2>
-        <p>A computer is an advanced electronic data-processing device that accepts raw data as input from the user, processes it under the control of a set of instructions (called a program), produces a meaningful result (output), and saves it for future use. It is widely referred to as a <strong>Data Processing Machine</strong> because its core function revolves around transforming raw facts into useful information.</p>
+<button class="print-btn no-print" onclick="window.print()">
+    🖨️ Print / Save PDF
+</button>
+
+<div id="main-content">
+    <header>
+        <h1>Computer Fundamentals Master Guide</h1>
+        <p>A simple and detailed guide to understanding computers for Technology, Education, and Research.</p>
+    </header>
+
+    <div class="container">
         
-        <div class="highlight-box">
-            <h4>The Data Processing Cycle</h4>
+        <section id="definition">
+            <h2>1. What is a Computer?</h2>
+            <p>A computer is a smart electronic machine. It takes information from you, works on it to solve problems, and then gives you the final answer. It also saves your work so you can look at it later. Because of this, it is often called a <strong>Data Processing Machine</strong>.</p>
+            
+            <div class="highlight-box">
+                <h4>The Data Processing Cycle (How it works)</h4>
+                <p>Think of it like cooking food:</p>
+                <ul>
+                    <li><strong>Data (Input):</strong> This is the raw information we give to the computer. <em>(Like raw vegetables before cooking).</em></li>
+                    <li><strong>Processing:</strong> This is when the computer works on the data to solve a problem. <em>(Like cooking the vegetables on a stove).</em></li>
+                    <li><strong>Output:</strong> This is the final result the computer gives back to us to use. <em>(Like the cooked food ready to eat).</em></li>
+                </ul>
+            </div>
+
+            <img src="data-processing-cycle.png" alt="Data Processing Cycle Flowchart" class="no-print">
+
+            <h3>Where do we use computers?</h3>
+            <p>Computers help us everywhere! We use them in Banking, Post Offices, Airlines, Astronomy (studying space), Astrology, Railways, Business, Medical Hospitals, and Education (schools and colleges).</p>
+        </section>
+
+        <section id="evolution">
+            <h2>2. History & Evolution of Computers</h2>
+            <p><strong>Father of the Computer:</strong> Charles Babbage (Born: 26.12.1791, Died: 18.10.1871). He was a very smart British Mathematics Professor who first imagined a machine that could calculate things automatically.</p>
+            
+            <img src="charles-babbage-engine.jpg" alt="Charles Babbage Analytical Engine" class="no-print">
+
+            <h3>Timeline of Important Inventions</h3>
+            <table>
+                <tr><th>Year</th><th>Invention Name</th><th>Inventor & Details</th></tr>
+                <tr><td>3000 BC</td><td>Abacus</td><td>Ancient Origins (The very first manual calculating toy with beads)</td></tr>
+                <tr><td>1642</td><td>Pascaline</td><td>Blaise Pascal (First mechanical adding machine)</td></tr>
+                <tr><td>1672</td><td>Mechanical Calculator</td><td>Gottfried Wilhelm Leibniz</td></tr>
+                <tr><td>1804</td><td>Automated Loom</td><td>Joseph Marie Jacquard</td></tr>
+                <tr><td>1822</td><td>Difference Engine</td><td>Charles Babbage</td></tr>
+                <tr><td>1842</td><td>Analytical Engine</td><td>Charles Babbage (The first idea of a programmable computer)</td></tr>
+                <tr><td>1937</td><td>Mark 1 Computer</td><td>Howard H. Aiken</td></tr>
+                <tr><td>1945</td><td>ENIAC</td><td>J. Presper Eckert & John Mauchly (Electronic Numerical Integrator & Calculator)</td></tr>
+                <tr><td>1946</td><td>EDVAC</td><td>John von Neumann</td></tr>
+                <tr><td>1948</td><td>ABC Computer</td><td>John Atanasoff & Clifford Berry</td></tr>
+                <tr><td>1950</td><td>IBM 650</td><td>The world's first mass-produced computer</td></tr>
+                <tr><td>1960</td><td>Mainframe Computer</td><td>Huge computers for large companies</td></tr>
+                <tr><td>1968</td><td>Minicomputer</td><td>Smaller and faster computers</td></tr>
+                <tr><td>1980</td><td>Supercomputer</td><td>The fastest computers for big research</td></tr>
+            </table>
+        </section>
+
+        <section id="classification">
+            <h2>3. Types of Computers</h2>
+            <p>We divide computers into groups based on <strong>What they do (Purpose)</strong> and <strong>How big they are (Size)</strong>.</p>
+
+            <h3>A. As per Purpose <span class="odia-text">(ଗଣନା ଯନ୍ତ୍ର)</span></h3>
+            <p>This tells us how the computer understands information. There are three types:</p>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>1. Digital Computer</h4>
+                    <p>This computer plays with numbers (0 and 1) and alphabets. We use it for normal calculations, typing reports, watching movies, and office work. You usually see these in your home or at a businessman's office.</p>
+                </div>
+                <div class="card">
+                    <h4>2. Analog Computer</h4>
+                    <p>This computer measures things that are always changing, like temperature, speed, or pressure. It does not give an exact number, but it gives a very close guess. It is mostly used to predict the weather <span class="odia-text">(ପାଣିପାଗ)</span>.</p>
+                </div>
+                <div class="card">
+                    <h4>3. Hybrid Computer</h4>
+                    <p>This is a mix of both Digital and Analog computers. It can measure changing things AND do exact math. These are very important in hospital ICU rooms to check a patient's heartbeat.</p>
+                </div>
+            </div>
+
+            <img src="classification-types.jpg" alt="Digital, Analog, and Hybrid Computers" class="no-print">
+
+            <h3>B. As per Size <span class="odia-text">(ଆକାର ଅନୁସାରେ)</span></h3>
+            <p>This tells us how big and powerful the computer is:</p>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>1. Microcomputer (1974)</h4>
+                    <p>This is the smallest computer. We also call it a Personal Computer (PC) because it is meant for one person to use for homework, games, and typing. It is very easy to carry around <span class="odia-text">(ଛୋଟ କମ୍ପୁଟର ନବା ଆଣିବା ସହଜରେ କରିପାରିବା)</span>.</p>
+                </div>
+                <div class="card">
+                    <h4>2. Minicomputer (1968)</h4>
+                    <p>Known as the "elder brother". It is faster and has more storage and RAM than a tiny microcomputer.</p>
+                </div>
+                <div class="card">
+                    <h4>3. Mainframe Computer (1960)</h4>
+                    <p>Known as the "grandfather". These are giant machines. They are super fast and have huge memory to help large banks and companies process millions of things at once.</p>
+                </div>
+                <div class="card">
+                    <h4>4. Supercomputer (1980)</h4>
+                    <p>The biggest, fastest, and most powerful computer in the world. The first one was made by Seymour Cray. India's first supercomputer was named <strong>PARAM</strong>. Scientists use these for space research and defense.</p>
+                </div>
+            </div>
+            
+            <img src="computer-sizes.jpg" alt="Micro, Mini, Mainframe, and Supercomputers" class="no-print">
+        </section>
+
+        <section id="system">
+            <h2>4. Computer Parts (Hardware & Software)</h2>
+            <p>A <strong>System</strong> means many different parts working together as a team to do a job. The computer system has three main team members:</p>
+            
+            <div class="grid-3">
+                <div class="card">
+                    <h4>Hardware</h4>
+                    <p>These are the physical parts of the computer. If you can touch it and see it with your eyes, it is hardware! Examples: The keyboard, mouse, wires, and the screen.</p>
+                </div>
+                <div class="card">
+                    <h4>Software</h4>
+                    <p>These are the programs inside the computer. You cannot touch software. It is like the thoughts and rules that tell the hardware what to do.</p>
+                </div>
+                <div class="card">
+                    <h4>Humanware</h4>
+                    <p>This means US! The humans, teachers, and students who turn on the computer and use it.</p>
+                </div>
+            </div>
+
+            <img src="system-architecture.png" alt="Computer System Architecture Diagram" class="no-print">
+
+            <h3>Input & Output Devices</h3>
+            <p>How do we talk to the computer, and how does it talk back?</p>
             <ul>
-                <li><strong>Data (Input):</strong> A collection of raw, unorganized facts and figures. Data represents raw input that becomes meaningful information only after proper organization and processing.</li>
-                <li><strong>Processing:</strong> The internal manipulation of input data by the central processing unit. This includes performing complex arithmetic calculations and logical operations to convert the raw data into a desired, structured format.</li>
-                <li><strong>Output:</strong> The final processed result, now converted into meaningful information, which is presented to the user and is available for direct use or application.</li>
+                <li><strong>Input Devices:</strong> These are tools we use to send our instructions INTO the computer. <em>Examples: The Keyboard (to type), Mouse (to click), and <strong>Scanner</strong> (to take a photo of a paper and put it inside the screen).</em></li>
+                <li><strong>Output Devices:</strong> These are tools the computer uses to show us the final answer. They let us see the results <span class="odia-text">(ଦେଖିବାକୁ ପାଇବା)</span>. <em>Examples: The <strong>Monitor</strong> (the screen that shows a "soft copy"), and the <strong>Printer</strong> (prints ink on paper to give us a "print out").</em></li>
             </ul>
-        </div>
 
-        <img src="data-processing-cycle.png" alt="Data Processing Cycle Flowchart" class="no-print" style="width: 100%; height: auto; border-radius: 12px; margin: 30px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <img src="input-output-devices.jpg" alt="Pictures of Keyboards, Mice, Monitors and Printers" class="no-print">
 
-        <h3>Uses of Computers in Society</h3>
-        <p>Computers form the backbone of modern infrastructure. Their primary uses span across numerous sectors including: Banking and Finance, Postal Services, Airline ticketing and navigation, Astronomy, Astrology, Railway management, Corporate Business, the Medical field (diagnostics and surgery), and Education.</p>
-    </section>
-
-    <section id="evolution">
-        <h2>2. Evolution of the Computer</h2>
-        <p><strong>Father of the Computer:</strong> Charles Babbage (26.12.1791 to 18.10.1871). A renowned British Mathematics Professor who conceptualized the first automatic mechanical computer.</p>
-        
-        <img src="charles-babbage-engine.jpg" alt="Charles Babbage Analytical Engine" class="no-print" style="width: 100%; height: auto; border-radius: 12px; margin: 30px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-
-        <h3>Historical Timeline</h3>
-        <table>
-            <tr><th>Year</th><th>Invention</th><th>Inventor / Detail</th></tr>
-            <tr><td>3000 BC</td><td>Abacus</td><td>Ancient Origins (First manual calculating device)</td></tr>
-            <tr><td>1642</td><td>Pascaline</td><td>Blaise Pascal</td></tr>
-            <tr><td>1672</td><td>Mechanical Calculator</td><td>Gottfried Wilhelm Leibniz</td></tr>
-            <tr><td>1804</td><td>Automated Loom</td><td>Joseph Marie Jacquard</td></tr>
-            <tr><td>1822</td><td>Difference Engine</td><td>Charles Babbage</td></tr>
-            <tr><td>1842</td><td>Analytical Engine</td><td>Charles Babbage (First concept of programmable computer)</td></tr>
-            <tr><td>1937</td><td>Mark 1 Computer</td><td>Howard H. Aiken</td></tr>
-            <tr><td>1945</td><td>ENIAC</td><td>J. Presper Eckert & John Mauchly (Electronic Numerical Integrator & Calculator)</td></tr>
-            <tr><td>1946</td><td>EDVAC</td><td>John von Neumann</td></tr>
-            <tr><td>1948</td><td>ABC Computer</td><td>John Atanasoff & Clifford Berry</td></tr>
-            <tr><td>1950</td><td>IBM 650</td><td>The world's first mass-produced computer</td></tr>
-            <tr><td>1960</td><td>Mainframe Computer</td><td>Era of massive computing systems</td></tr>
-            <tr><td>1968</td><td>Minicomputer</td><td>Smaller, faster mid-range systems</td></tr>
-            <tr><td>1980</td><td>Supercomputer</td><td>High-performance computing for advanced research</td></tr>
-        </table>
-    </section>
-
-    <section id="classification">
-        <h2>3. Classification of Computers</h2>
-        <p>Computers are broadly classified into two distinct categories based on their operational mechanisms (purpose) and their physical size and processing capabilities.</p>
-
-        <h3>A. As per Purpose <span class="odia-text">(ଗଣନା ଯନ୍ତ୍ର)</span></h3>
-        <p>This defines how the machine fundamentally processes signals and data. It is mainly divided into three types:</p>
-        <div class="grid-3">
-            <div class="card">
-                <h4>1. Digital Computer</h4>
-                <p>A type of computer that processes information in a discrete form using binary numbers (0s and 1s). It utilizes digits, alphabets, mathematical symbols, and numericals to perform exact calculations, create reports, facilitate normal entertainment, and manage various office tasks. Primarily used in homes, corporate offices, and by businessmen.</p>
-            </div>
-            <div class="card">
-                <h4>2. Analog Computer</h4>
-                <p>A highly specialized computer designed to process continuous, dynamic data rather than discrete numbers. It is used to measure constantly changing physical quantities like fluid pressure, voltage, and temperature. Because it deals with continuous data, it always gives an approximate, comparative result rather than an exact digit. A primary application is weather forecasting <span class="odia-text">(ପାଣିପାଗ)</span>.</p>
-            </div>
-            <div class="card">
-                <h4>3. Hybrid Computer</h4>
-                <p>A specialized computer that combines the continuous measurement capabilities of an analog computer with the exact logical processing capabilities of a digital computer. These are most heavily utilized in complex scientific and medical fields, such as ICU patient monitoring systems.</p>
-            </div>
-        </div>
-
-        <h3>B. As per Size <span class="odia-text">(ଆକାର ଅନୁସାରେ)</span></h3>
-        <p>This categorizes computers based on their physical footprint, processing speed, and architectural generation:</p>
-        <div class="grid-2">
-            <div class="card">
-                <h4>1. Microcomputer (1974)</h4>
-                <p>The smallest tier of functional computers available, utilizing a single microprocessor as its CPU. It is commonly known as a Personal Computer (PC) because it is designed for individual use handling personal tasks such as creating reports, drafting documents, and browsing. <strong>Features:</strong> Highly software-oriented and extremely portable <span class="odia-text">(ଛୋଟ କମ୍ପୁଟର ନବା ଆଣିବା ସହଜରେ କରିପାରିବା)</span>.</p>
-            </div>
-            <div class="card">
-                <h4>2. Minicomputer (1968)</h4>
-                <p>Popularly recognized as the "elder brother" of the computer era. Compared to a microcomputer, a minicomputer operates significantly faster, possesses a much larger storage capacity, and features a substantially larger RAM allocation to handle multiple users concurrently.</p>
-            </div>
-            <div class="card">
-                <h4>3. Mainframe Computer (1960)</h4>
-                <p>Recognized as the massive "grandfather" of the computer era. These are industrial-scale machines that are extremely fast. They feature immense storage capacities and enormous amounts of RAM designed specifically to process millions of transactions and heavy data loads simultaneously for large organizations.</p>
-            </div>
-            <div class="card">
-                <h4>4. Supercomputer (1980)</h4>
-                <p>The ultimate and most powerful tier of computers available today. The first supercomputer was invented by Seymour Cray (CDC-1604). The very first Indian-developed supercomputer was named <strong>PARAM</strong>. These machines are exclusively utilized for massive simulations, Defense operations, and cutting-edge Research by Scientists.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="system">
-        <h2>4. Computer System Architecture</h2>
-        <p><strong>System:</strong> A system is formally defined as a group of interacting or interrelated parts (such as people, methods, and physical materials) working together to achieve a common objective. A computer is a programmable electronic device that can store, retrieve, and process data. The computer system is comprised of three core components:</p>
-        
-        <div class="grid-3">
-            <div class="card">
-                <h4>Hardware</h4>
-                <p>The tangible, physical components of the computer system. Hardware encompasses any part of the computer that you can physically touch and see. This includes the CPU, peripheral input devices, output monitors, and physical storage drives.</p>
-            </div>
-            <div class="card">
-                <h4>Software</h4>
-                <p>The non-material, logical component of the computer. Software is a structured set of programming instructions that controls and directs the hardware on how to perform specific tasks. This category includes System Software (operating systems), Application Software, the CU, ALU, and Utility Software.</p>
-            </div>
-            <div class="card">
-                <h4>Humanware</h4>
-                <p>The human element of computing. This refers to the users, programmers, and system administrators who operate, design, and maintain the computer systems.</p>
-            </div>
-        </div>
-
-        <img src="system-architecture.png" alt="Computer System Architecture Diagram" class="no-print" style="width: 100%; height: auto; border-radius: 12px; margin: 30px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-
-        <h3>Peripherals: Input & Output Devices</h3>
-        <ul>
-            <li><strong>Input Device:</strong> An electromechanical device that provides human-to-machine communication. Input devices capture data in various external forms (text, sound, motion) and convert it into binary electronic signals (0s and 1s) that can be understood and processed by the CPU. Simply put, these devices enable the user to enter data, commands, and programs into the system. <em>Examples include: Keyboard, Mouse, Optical Mark Reader (OMR), Optical Character Reader (OCR).</em></li>
-            <li><strong>Output Device:</strong> An external hardware component connected to the computer system tasked with translating the processed machine data back into a human-readable form. These devices allow the outside world to receive information and enable the user to see <span class="odia-text">(ଦେଖିବାକୁ ପାଇବା)</span> the visual results of word processing, data manipulations, and calculations. <em>Examples include: Printers, Modems (Modulator-Demodulator), and VDT (Video Display Terminals).</em></li>
-        </ul>
-
-        <div class="card" style="margin: 20px 0;">
-            <h4>Deep Dive: The Keyboard</h4>
-            <p>The keyboard is the primary text-based input device, structured to send distinct command signals and textual information to the computer. It comprises several specific key groupings:</p>
+            <h3>The CPU (Central Processing Unit)</h3>
+            <p>The CPU is the Brain and the Heart of the computer. Just like your brain solves math problems, the CPU solves computer problems. It has two main parts:</p>
             <ul>
-                <li><strong>Alphanumeric Keys:</strong> The core typing block used to input written text, alphabets, and standard numerical data.</li>
-                <li><strong>Function Keys:</strong> The sequence of twelve keys located across the top row (labeled F1 through F12). They are programmed to execute specific shortcut commands depending on the active software.</li>
-                <li><strong>Control Keys (Booster Keys):</strong> Keys such as Shift, Ctrl, and Alt. They do not produce a character on their own but are used in combination with other keys to issue complex system commands.</li>
-                <li><strong>Enter Key:</strong> Executes a typed command, finalizes a selected option from a menu, or marks the end of a line (functioning historically like a typewriter's carriage return).</li>
-                <li><strong>Backspace & Space Bar:</strong> The Backspace key deletes a single character immediately to the left of the flashing cursor. The Space Bar inserts a blank space between words to structure sentences.</li>
-                <li><strong>ESC (Escape):</strong> Located in the upper left-hand corner, this key is universally used to cancel or abort a current selection or process.</li>
-                <li><strong>Tab:</strong> Advances the cursor forward to the right by a predefined number of spaces, used heavily for indenting text or jumping to the next cell in a spreadsheet.</li>
-                <li><strong>Caps Lock & Shift:</strong> Caps Lock is a persistent "toggle" key that locks the alphabetic output strictly into uppercase. Shift temporarily accesses upper-case characters and secondary symbols printed on the upper half of standard keys.</li>
-                <li><strong>Arrow Keys:</strong> Directional keys utilized to manually navigate the cursor up, down, left, or right across the screen.</li>
-                <li><strong>Navigation Toggles:</strong> Include Insert (switches between inserting text and typing over existing text), Home (moves the cursor to the exact beginning of a line), End (moves the cursor to the extreme end of a line), and Page Up / Page Down (used to scroll vertically one full screen at a time).</li>
-                <li><strong>Numeric Keypad:</strong> Located on the far right, mimicking a standard calculator pad for rapid numerical entry. It is controlled by the <em>Num Lock</em> toggle key.</li>
-                <li><strong>Special Operations:</strong> The Application key acts as a right-click to produce shortcut menus. Print Screen, Scroll Lock, and Break are heritage keys primarily used in DOS environments to manipulate screen displays and interrupts.</li>
+                <li><strong>C.U. (Control Unit):</strong> This is the Manager. It controls everything and tells all the other parts what to do step-by-step.</li>
+                <li><strong>A.L.U. (Arithmetic Logic Unit):</strong> This is the Math solver. It does all the plus, minus, multiply, and checking (like asking "is 5 bigger than 3?").</li>
             </ul>
-        </div>
-        
-        <h4>Scanners, Printers & Monitors</h4>
-        <ul>
-            <li><strong>Scanner:</strong> A sophisticated input device that optically captures images from photographic prints, posters, and physical documents, converting them into digital images for computer editing and display. Scanners can operate in black-and-white or full color. High-resolution scanners are required for professional printing, whereas low-resolution scanners suffice for basic on-screen display.</li>
-            <li><strong>Printer:</strong> An output device engineered to produce a permanent physical record of electronic documents on paper. The resulting physical paper copy is officially referred to as a "print out". Printers are classified by their output quality and page-per-minute printing speed. Common variants include Dot Matrix, Chain, Drum, Inkjet, and Laser printers.</li>
-            <li><strong>Monitor:</strong> Officially known as a Visual Display Unit (VDT). It is the primary visual output device. The transient, on-screen display of information generated by the monitor is formally referred to as a "soft copy", as opposed to the "hard copy" produced by a printer.</li>
-        </ul>
+            <img src="cpu-brain-diagram.jpg" alt="CPU Brain Diagram showing CU and ALU" class="no-print">
+        </section>
 
-        <h3>The Central Processing Unit (CPU)</h3>
-        <p>The CPU is universally recognized as both the brain and the heart of the computer system. It is the core circuitry where all active data processing occurs; it retrieves instructions from memory, decodes them, and processes the inputs. The combination of the Control Unit, the Arithmetic Logic Unit, and the primary memory is jointly referred to as the CPU.</p>
-        <ul>
-            <li><strong>C.U. (Control Unit):</strong> The managerial component of the CPU. It strictly dictates the sequence of internal operations, interprets coded software instructions, and seamlessly directs the hardware components to execute the program.</li>
-            <li><strong>A.L.U. (Arithmetic Logic Unit):</strong> The mathematical and decision-making component of the CPU. This is where all quantitative arithmetic expressions (addition, multiplication) and qualitative logical comparisons (determining if a value is greater than, less than, or equal to another) are definitively executed.</li>
-        </ul>
-    </section>
+        <section id="memory">
+            <h2>5. Computer Memory (Storage)</h2>
+            <p>Memory is the computer's storage box. It is where the computer safely keeps your instructions, photos, and games so it can use them later.</p>
 
-    <section id="memory">
-        <h2>5. Architecture and Classification of Memory</h2>
-        <p>Computer memory acts as the electronic holding space for instructions and data that the microprocessor requires rapid access to. Formally called the Data Storage Unit, it is a physical medium designed to accept data, hold it securely, and deliver it exactly on demand at a later time. Memory architecture is divided into two primary tiers:</p>
-
-        <h3>1. Main Memory (Internal / Primary Memory)</h3>
-        <p>Main memory is an internally integrated, fundamental part of the CPU architecture. Every single instruction and piece of data required for an active, executing program must be housed temporarily within this internal memory. Because it is directly linked to the CPU via high-speed buses, it operates at lightning-fast speeds. It is split into two distinct types:</p>
-        <div class="grid-2">
-            <div class="card">
-                <h4>RAM (Random Access Memory)</h4>
-                <ul>
-                    <li><strong>Mechanism:</strong> Data is accessed directly and randomly at any location at the exact same speed, rather than being read sequentially from start to finish.</li>
-                    <li><strong>Function:</strong> It allows the processor to rapidly both Read existing data and Write new data.</li>
-                    <li><strong>Material:</strong> Constructed utilizing integrated semiconductor circuits.</li>
-                    <li><strong>State:</strong> It is highly <strong>volatile</strong> in nature. This means all stored data is permanently lost the moment the electrical power supply is turned off.</li>
-                </ul>
+            <h3>1. Internal Memory (Main Memory)</h3>
+            <p>This memory lives right next to the CPU Brain. Because it is so close, it is incredibly fast. The computer uses it while it is actively working on a task. It comes in two types:</p>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>RAM (Random Access Memory)</h4>
+                    <ul>
+                        <li>You can Read from it and Write new things on it.</li>
+                        <li>It works randomly, so it finds things very fast.</li>
+                        <li>It is <strong>volatile</strong>. This means it forgets EVERYTHING if the electricity goes off! It only remembers while the computer is turned on.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>ROM (Read Only Memory)</h4>
+                    <ul>
+                        <li>You can only Read from it. You cannot change what is written inside.</li>
+                        <li>It keeps the computer's startup rules.</li>
+                        <li>It is <strong>non-volatile</strong>. It remembers everything perfectly even when the power is unplugged.</li>
+                    </ul>
+                </div>
             </div>
-            <div class="card">
-                <h4>ROM (Read Only Memory)</h4>
-                <ul>
-                    <li><strong>Mechanism:</strong> As the name strictly implies, data is pre-recorded, and the user cannot write or alter the instructions inside it.</li>
-                    <li><strong>Function:</strong> It holds the critical, unchangeable boot instructions necessary to start the computer.</li>
-                    <li><strong>Material:</strong> Historically developed using magnetic core technologies.</li>
-                    <li><strong>State:</strong> It is definitively <strong>non-volatile</strong>. The data is permanent and is never lost, even when the system is completely powered down.</li>
-                </ul>
-            </div>
-        </div>
 
-        <h3>2. Auxiliary Memory (External / Secondary Storage)</h3>
-        <p>Often referred to as Secondary Storage, this represents the permanent repository for data. All critical user files, operating systems, and applications are housed here for long-term future use. While it reads and writes data slightly slower than internal main memory, its storage capacity is exponentially larger and continues to increase as technology advances.</p>
-        
-        <h4>A. Magnetic-Based Storage</h4>
-        <p>This technology relies on the magnetic properties of specific materials to retain data. Information is encoded onto a spinning surface that has been specially coated with a magnetic substance. Examples include magnetic tape drives and magnetic disks.</p>
-        <ul>
-            <li><strong>Floppy Disk:</strong> A legacy portable storage medium consisting of a flexible, oxide-coated magnetic disk protected within a thin, square plastic jacket. Historically, the floppy disk evolved significantly: first appearing in 1971 as a massive 8-inch disk holding 1MB, shrinking in 1976 to a 5.25-inch format holding 1.2MB, and finally culminating in 1987 as the rigid 3.5-inch microfloppy. <em>Features:</em> Highly portable, extremely economical, but severely limited by low storage capacities.</li>
-            <li><strong>Hard Disk Drive (HDD):</strong> A heavy-duty, high-capacity storage device containing a series of large, rigid spinning magnetic platters sealed securely inside a vacuum case to prevent dust contamination. It acts as the primary, high-volume online storage device for almost all standard computers, holding data in the gigabyte and terabyte ranges. <em>Features:</em> Fixed permanently inside the system chassis, historically higher cost, but offers massive data storage capability.</li>
-        </ul>
-        
-        <h4>B. Optics-Based Storage</h4>
-        <p>A more modern development in secondary storage that utilizes highly focused lasers to read and write data via microscopic pits on a reflective surface, offering a completely different technological approach to magnetism.</p>
-        <ul>
-            <li><strong>CD (Compact Disk):</strong> An optical medium primarily used to store digital audio and basic software installations.</li>
-            <li><strong>DVD (Digital Versatile Disk):</strong> An advanced optical format providing significantly higher storage capacity than a CD, utilized for high-definition video and massive software distributions.</li>
-        </ul>
-    </section>
+            <img src="ram-and-rom.jpg" alt="Picture of RAM stick and ROM chip" class="no-print">
 
-    <section id="software">
-        <h2>6. Software & Operating Systems Depth</h2>
-        <p>While hardware represents the physical, mechanical body of the computer, software functions as its intellect. A computer is merely a collection of metal and plastic until software is introduced. Software is the intangible collection of codified instructions that brings the hardware to life.</p>
-
-        <div class="grid-2">
-            <div class="card">
-                <h4>System Software (Operating Systems)</h4>
-                <p>The Operating System (OS) is the master control program. It acts as the fundamental bridge allocating memory, managing system files, scheduling tasks, and interfacing directly with hardware components.</p>
-                <ul>
-                    <li><strong>Windows:</strong> The most widely adopted, user-friendly Graphical User Interface (GUI) OS for global personal computers.</li>
-                    <li><strong>Linux / UNIX:</strong> A highly secure, incredibly stable open-source OS architecture used predominantly to run the world's backend servers and enterprise mainframes.</li>
-                    <li><strong>macOS & Android:</strong> Apple's proprietary UNIX-based system, alongside the world's leading mobile touchscreen operating system.</li>
-                </ul>
-            </div>
-            <div class="card">
-                <h4>Application Software</h4>
-                <p>These are end-user programs specifically engineered to help human users accomplish distinct, real-world tasks rather than running the internal systems of the computer.</p>
-                <ul>
-                    <li><strong>Word Processors:</strong> Applications like Microsoft Word, utilized to create, format, and edit complex text documents.</li>
-                    <li><strong>Spreadsheets:</strong> Applications like Microsoft Excel, utilized for rigid data tabulation, financial modeling, and automated mathematical logic.</li>
-                    <li><strong>DBMS:</strong> Database Management Systems like MySQL or Microsoft Access, designed to securely catalog, manage, and retrieve massive digital data arrays.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="card" style="margin-top: 20px;">
-            <h4>Graphical User Interface (GUI) & Multi-User Architecture</h4>
+            <h3>2. External Memory (Auxiliary Storage)</h3>
+            <p>This is the permanent storage box. You use this to save your work, movies, and games safely for years. It is a little slower than Internal Memory, but it can hold a LOT more stuff.</p>
+            
+            <h4>A. Magnetic Storage (Uses Magnets)</h4>
             <ul>
-                <li><strong>Window:</strong> A defined, bordered viewing area on a computer display screen. Modern OS environments like Windows utilize a Graphical User Interface to allow users to interact visually, enabling multiple windows (tasks) to be open and visible concurrently.</li>
-                <li><strong>Icon:</strong> A small, highly recognizable graphical picture that acts as a shortcut representing a file, folder, or executable program. Clicking or double-clicking the icon actively executes the linked program.</li>
-                <li><strong>Multi-User System:</strong> An advanced network architecture where a central CPU is made available to multiple unique users simultaneously. In this setup, vast arrays of data and physical resources (like printers) can be effortlessly shared, making the entire infrastructure highly efficient and economical.</li>
+                <li><strong>Floppy Disk:</strong> A very old, flexible square disk. In 1971 it was 8 inches big, then 5.25 inches, and finally 3.5 inches in 1987. It is cheap and easy to carry, but holds very little data (only 1MB to 1GB).</li>
+                <li><strong>Hard Disk:</strong> A large, heavy metal box fixed inside the computer. It spins like a record player. It is expensive but holds massive amounts of data (gigabytes and terabytes).</li>
             </ul>
-        </div>
+            
+            <h4>B. Optical Storage (Uses Lasers)</h4>
+            <p>These are shiny, round discs that use bright laser lights to read your data instead of magnets.</p>
+            <ul>
+                <li><strong>CD (Compact Disk):</strong> Good for storing songs and small software.</li>
+                <li><strong>DVD (Digital Versatile Disk):</strong> Can hold much more data than a CD, perfect for long movies.</li>
+            </ul>
+        </section>
 
-        <img src="software-hierarchy.png" alt="Software and Hardware Hierarchy" class="no-print" style="width: 100%; height: auto; border-radius: 12px; margin: 30px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <section id="software">
+            <h2>6. Software & Operating Systems</h2>
+            <p>Hardware is the body, but Software is the mind. The computer cannot do anything without software telling it how.</p>
 
-        <h3>Computer Languages & Code Translators</h3>
-        <p>Computers fundamentally operate only on machine language (raw binary 0s and 1s). Human programmers write code in more readable, logical "High-Level" languages. Therefore, specialized translator programs are absolutely required to bridge this gap.</p>
-        <ul>
-            <li><strong>Assembler:</strong> A specific translator program that converts low-level assembly language (which uses basic mnemonic codes) directly into pure machine code.</li>
-            <li><strong>Compiler:</strong> A highly efficient translator that scans the entire bulk of a high-level source code (like C++ or Java) and translates the entirety of it into an executable machine code file all at once before the program is ever run.</li>
-            <li><strong>Interpreter:</strong> A real-time translator that takes high-level source code and translates it line-by-line sequentially, executing each line immediately as it translates (commonly used in languages like Python).</li>
-        </ul>
-    </section>
-
-    <section id="data">
-        <h2>7. Data Representation & Number Systems</h2>
-        <p>In order to process complex media, a computer must mathematically convert all audio, video, text, and images into a raw digital format. This relies on distinct, strict numerical systems and universally standardized memory metrics.</p>
-        <div class="grid-3">
-            <div class="card">
-                <h4>Binary System (Base 2)</h4>
-                <p>The native, foundational language of all modern computers. It consists entirely of just two digits: <code>0</code> (representing an electrical Off state) and <code>1</code> (representing an electrical On state). Every piece of complex data is eventually broken down into these binary streams.</p>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>System Software (The Boss)</h4>
+                    <p>Also called the Operating System (OS). It is the main boss that controls the memory, files, and hardware.</p>
+                    <ul>
+                        <li><strong>Windows:</strong> The most famous OS for computers at home and school.</li>
+                        <li><strong>Linux / UNIX:</strong> A very safe, free OS used by big internet servers.</li>
+                        <li><strong>Android:</strong> The OS that runs inside your mobile touchscreen phones!</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Application Software (The Helper)</h4>
+                    <p>These are the specific "apps" you open to do your work.</p>
+                    <ul>
+                        <li><strong>Word Processors:</strong> Like MS Word, used for typing letters.</li>
+                        <li><strong>Spreadsheets:</strong> Like MS Excel, used for math and tables.</li>
+                        <li><strong>DBMS:</strong> Used to safely store huge lists of information.</li>
+                    </ul>
+                </div>
             </div>
-            <div class="card">
-                <h4>Decimal System (Base 10)</h4>
-                <p>The standard, conventional numerical system utilized by humans in daily life, consisting of ten individual digits (0 through 9). A computer must constantly run algorithms to translate our decimal inputs back into its native binary format.</p>
-            </div>
-            <div class="card">
-                <h4>Hexadecimal System (Base 16)</h4>
-                <p>A more complex system utilized heavily by programmers to manage memory addresses. It uses sixteen distinct symbols: numbers 0-9 and letters A-F, allowing very long strings of binary code to be represented in a much shorter, human-readable format.</p>
-            </div>
-        </div>
 
-        <h3>Standardized Units of Memory Data</h3>
-        <table>
-            <tr><th>Unit</th><th>Abbreviation</th><th>Exact Value Definition</th></tr>
-            <tr><td>Bit</td><td>b</td><td>The absolute smallest unit of data; a single Binary Digit containing either a 0 or a 1.</td></tr>
-            <tr><td>Nibble</td><td>-</td><td>A grouped cluster of exactly 4 Bits.</td></tr>
-            <tr><td>Byte</td><td>B</td><td>A cluster of exactly 8 Bits, which is the exact amount of space required to store a single alphabetical text character.</td></tr>
-            <tr><td>Kilobyte</td><td>KB</td><td>Exactly 1,024 Bytes.</td></tr>
-            <tr><td>Megabyte</td><td>MB</td><td>Exactly 1,024 Kilobytes.</td></tr>
-            <tr><td>Gigabyte</td><td>GB</td><td>Exactly 1,024 Megabytes.</td></tr>
-            <tr><td>Terabyte</td><td>TB</td><td>Exactly 1,024 Gigabytes.</td></tr>
-        </table>
-    </section>
-
-    <section id="networking">
-        <h2>8. Networking & The Internet</h2>
-        <p><strong>Computer Network:</strong> A sophisticated infrastructure established when two or more distinct computers are physically or wirelessly linked with each other specifically to send, receive, and share electronic data. Networks are essential for sharing digital resources, hardware, and applications securely.</p>
-        
-        <img src="network-topologies.png" alt="Computer Network Topologies" class="no-print" style="width: 100%; height: auto; border-radius: 12px; margin: 30px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-
-        <h3>Network Geographic Scales</h3>
-        <p>Networks are classified based on the physical geographical area they successfully cover:</p>
-        <ul>
-            <li><strong>LAN (Local Area Network):</strong> An intimate network covering a highly restricted geographical footprint, such as a single computer lab, a household, or an office building, usually connected via Ethernet cabling or localized Wi-Fi.</li>
-            <li><strong>MAN (Metropolitan Area Network):</strong> A significantly larger infrastructure designed to bridge multiple LANs together across a sprawling city environment or a large university campus.</li>
-            <li><strong>WAN (Wide Area Network):</strong> A massive, borderless network that covers vast geographical distances crossing states or entire countries. The global Internet itself is the ultimate, universally accessible WAN.</li>
-        </ul>
-    </section>
-
-    <section id="security">
-        <h2>9. Cybersecurity & Threat Mitigation</h2>
-        <p>As computers became universally interconnected, Cybersecurity emerged as a critical field. It involves the meticulous practices, software technologies, and strict user processes designed exclusively to protect networks, hardware, and sensitive user data from malicious attack, digital damage, or unauthorized infiltration.</p>
-
-        <div class="grid-2">
-            <div class="card">
-                <h4>Common Digital Threats (Malware)</h4>
+            <div class="card" style="margin-top: 20px;">
+                <h4>What you see on the Screen (GUI)</h4>
                 <ul>
-                    <li><strong>Computer Virus:</strong> A destructive piece of malicious code capable of copying itself to corrupt systems and destroy files. Crucially, a virus requires human action (like opening an infected attachment) to execute. <br><br>
-                        <span class="odia-text">କମ୍ପୁଟର ସିଷ୍ଟମ ଜାଣିନଥିବା ଲୋକକୁ ସିଷ୍ଟମ ବ୍ୟବହାର କରିବାକୁ ଦବନି I ଗୋଟିଏ ସିଷ୍ଟମ ରୁ ଅନ୍ୟ ସିଷ୍ଟମ କୁ File, folder, other share କରିବନି କାରଣ କିଛି ଭାଇରସ ରହିଯାଇପାରେ I</span> <br>
-                        <em>Primary vectors include Email viruses and executable File viruses.</em></li>
-                    <li><strong>Worm:</strong> Highly dangerous malware similar to a virus, but capable of autonomously replicating and spreading violently across live networks without requiring any human interaction.</li>
-                    <li><strong>Trojan Horse:</strong> Destructive malware deliberately disguised as a legitimate, helpful application in order to trick the end-user into willingly installing it on their machine.</li>
-                    <li><strong>Ransomware:</strong> A severe threat where malware successfully encrypts and locks a victim's personal files, followed by an extortion demand for a monetary ransom payment in exchange for the decryption key.</li>
-                    <li><strong>Phishing:</strong> The deceptive, fraudulent practice of broadcasting fake emails designed to perfectly mimic reputable companies, aimed solely at inducing individuals to reveal sensitive personal information like banking passwords.</li>
+                    <li><strong>Window:</strong> A square box on your screen where your program opens. You can have many windows open at once.</li>
+                    <li><strong>Icon:</strong> A tiny, colorful picture that stands for a file or a game. When you double-click the icon, the game starts!</li>
+                    <li><strong>Multi-User:</strong> A smart system where many students can use the same main CPU at the same time, sharing printers and files to save money.</li>
                 </ul>
             </div>
-            <div class="card">
-                <h4>Defensive Countermeasures</h4>
-                <ul>
-                    <li><strong>Antivirus / Anti-malware Programs:</strong> Dedicated security software persistently deployed to scan, identify, aggressively isolate, and permanently eliminate malicious software code from the system.</li>
-                    <li><strong>Firewall:</strong> An intelligent network security barrier that strictly monitors, filters, and controls both incoming and outgoing internet traffic based on predetermined safety rules.</li>
-                    <li><strong>Data Encryption:</strong> The mathematical process of scrambling readable data into an unreadable format, ensuring that even if stolen, only authorized parties with the correct key can decode and access the information.</li>
-                    <li><strong>Authentication Protocols:</strong> The strict enforcement of verifying user identity before granting system access, utilizing strong passwords, physical biometrics, and Multi-Factor Authentication (MFA).</li>
-                </ul>
-            </div>
-        </div>
-    </section>
 
-    <section id="multimedia">
-        <h2>10. Multimedia Technologies</h2>
-        <p><strong>Multimedia:</strong> At its core, multimedia represents the dynamic integration and synchronization of multiple distinct forms of media. It is the convergence of high-quality digital text, vibrant graphics, high-resolution pictures, fluid animations, and immersive video, all perfectly occupied with synchronized, multi-channel sound to create a highly engaging, interactive digital experience.</p>
-        <div class="grid-3">
-            <div class="card">
-                <h4>Sound Card</h4>
-                <p>A specialized, internal hardware expansion component installed securely into the motherboard. Its primary function is to process complex digital audio signals, thereby enabling the computer to flawlessly record external audio inputs and generate rich audio outputs.</p>
-            </div>
-            <div class="card">
-                <h4>Speakers</h4>
-                <p>The dedicated peripheral audio output device. Speakers act as the final delivery mechanism utilized to physically project the sounds, ambient music, and synthesized voices that have been processed internally by the sound card to the human user.</p>
-            </div>
-            <div class="card">
-                <h4>CD-ROM</h4>
-                <p>An optical storage disk formatted explicitly for the permanent distribution of large-scale, read-only multimedia applications. Because of its reliable capacity, it has historically been used to seamlessly deliver high-resolution photo archives, interactive educational software, and uncompressed digital audio files.</p>
-            </div>
-        </div>
-    </section>
+            <img src="software-hierarchy.png" alt="Software and Hardware Hierarchy" class="no-print">
 
+            <h3>Translators (Understanding the Computer)</h3>
+            <p>Computers do not speak English or Odia. They only understand "Machine Code" (0s and 1s). A Translator is a special software that changes our English typed words into 0s and 1s so the computer can understand us.</p>
+            <ul>
+                <li><strong>Assembler:</strong> Changes basic assembly codes into machine code.</li>
+                <li><strong>Compiler:</strong> Reads an entire book of code and translates it all at once.</li>
+                <li><strong>Interpreter:</strong> Reads and translates the code slowly, line-by-line.</li>
+            </ul>
+        </section>
+
+        <section id="data">
+            <h2>7. Data & Number Systems</h2>
+            <p>How does the computer store numbers and letters? It uses special number systems!</p>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>Binary System</h4>
+                    <p>The computer's favorite language. It uses only two numbers: <code>0</code> (Off) and <code>1</code> (On).</p>
+                </div>
+                <div class="card">
+                    <h4>Decimal System</h4>
+                    <p>The normal numbers humans use every day: 0, 1, 2, 3, 4, 5, 6, 7, 8, and 9.</p>
+                </div>
+                <div class="card">
+                    <h4>Hexadecimal System</h4>
+                    <p>A mix of numbers (0-9) and alphabets (A-F) used by programmers to write shorter code.</p>
+                </div>
+            </div>
+            
+            <img src="binary-numbers.jpg" alt="0s and 1s Binary Code" class="no-print">
+
+            <h3>Units of Memory (How we measure storage)</h3>
+            <table>
+                <tr><th>Name</th><th>Short Name</th><th>How big is it?</th></tr>
+                <tr><td>Bit</td><td>b</td><td>The smallest piece of data. It is just a single 0 or 1.</td></tr>
+                <tr><td>Nibble</td><td>-</td><td>4 Bits grouped together.</td></tr>
+                <tr><td>Byte</td><td>B</td><td>8 Bits. This is enough space to store one single letter, like 'A'.</td></tr>
+                <tr><td>Kilobyte</td><td>KB</td><td>1,024 Bytes.</td></tr>
+                <tr><td>Megabyte</td><td>MB</td><td>1,024 Kilobytes.</td></tr>
+                <tr><td>Gigabyte</td><td>GB</td><td>1,024 Megabytes. (A movie is usually 1 or 2 GB).</td></tr>
+                <tr><td>Terabyte</td><td>TB</td><td>1,024 Gigabytes. (Huge storage!).</td></tr>
+            </table>
+        </section>
+
+        <section id="networking">
+            <h2>8. Networking & The Internet</h2>
+            <p><strong>Computer Network:</strong> When we connect two or more computers together using wires or Wi-Fi so they can share photos, games, and printers, it is called a network.</p>
+            
+            <img src="network-topologies.png" alt="Computer Network Topologies" class="no-print">
+
+            <h3>Types of Networks (By Size)</h3>
+            <ul>
+                <li><strong>LAN (Local Area Network):</strong> A small network inside one single room, school, or house.</li>
+                <li><strong>MAN (Metropolitan Area Network):</strong> A bigger network that connects computers across a whole city.</li>
+                <li><strong>WAN (Wide Area Network):</strong> A massive network that connects the whole world. The Internet you use on your phone is a WAN!</li>
+            </ul>
+        </section>
+
+        <section id="security">
+            <h2>9. Security & Keeping Computers Safe</h2>
+            <p>Just like we lock our house doors to stay safe from thieves, we need to protect our computers from bad software that wants to destroy our files.</p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Digital Threats (The Bad Guys)</h4>
+                    <ul>
+                        <li><strong>Computer Virus:</strong> A bad program that damages your files. It only spreads if you click on it. <br><br>
+                            <span class="odia-text">କମ୍ପୁଟର ସିଷ୍ଟମ ଜାଣିନଥିବା ଲୋକକୁ ସିଷ୍ଟମ ବ୍ୟବହାର କରିବାକୁ ଦବନି I ଗୋଟିଏ ସିଷ୍ଟମ ରୁ ଅନ୍ୟ ସିଷ୍ଟମ କୁ File, folder, other share କରିବନି କାରଣ କିଛି ଭାଇରସ ରହିଯାଇପାରେ I</span></li>
+                        <li><strong>Worm:</strong> Like a virus, but it can jump from computer to computer on its own!</li>
+                        <li><strong>Trojan Horse:</strong> A bad program pretending to be a fun game. When you open it, it attacks your computer.</li>
+                        <li><strong>Ransomware:</strong> A program that locks your photos and asks for money to unlock them.</li>
+                        <li><strong>Phishing:</strong> A fake email tricking you into giving away your password.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Defenses (The Good Guys)</h4>
+                    <ul>
+                        <li><strong>Antivirus:</strong> A guard program that scans your computer, finds viruses, and deletes them.</li>
+                        <li><strong>Firewall:</strong> A digital wall that blocks bad hackers from entering your computer from the internet.</li>
+                        <li><strong>Encryption:</strong> Scrambling your messages into a secret code so thieves cannot read them.</li>
+                        <li><strong>Authentication:</strong> Using strong passwords or fingerprints to prove it is really you using the computer.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <img src="cyber-security.jpg" alt="Computer shield protecting from viruses" class="no-print">
+        </section>
+
+        <section id="multimedia">
+            <h2>10. Multimedia</h2>
+            <p><strong>Multimedia:</strong> This means combining beautiful pictures, moving animations, graphics, and music together to make things fun and interactive (like playing a video game or watching a cartoon).</p>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>Sound Card</h4>
+                    <p>A special chip inside the computer that processes audio so you can record your voice or play songs.</p>
+                </div>
+                <div class="card">
+                    <h4>Speaker</h4>
+                    <p>The device that pushes the sound out loud so you can hear the music and voices.</p>
+                </div>
+                <div class="card">
+                    <h4>CD-ROM</h4>
+                    <p>A shiny disc used to hold big games, high-quality photos, and long audio files.</p>
+                </div>
+            </div>
+            
+            <img src="multimedia-devices.jpg" alt="Speakers, Sound Cards, and CDs" class="no-print">
+        </section>
+
+    </div>
+
+    <footer class="no-print" style="text-align: center; padding: 30px; background: var(--primary); color: white; margin-top: 50px; border-top: 5px solid var(--accent);">
+        <p style="margin: 0;"><strong>Excellent Institute | Computer Master Guide</strong></p>
+        <p style="font-size: 0.9rem; color: #cbd5e1; margin-top: 10px;">Educational Resources &copy; 2026 | Developed for extensive fundamental study</p>
+    </footer>
 </div>
-
-<footer class="no-print" style="text-align: center; padding: 30px; background: var(--primary); color: white; margin-top: 50px; border-top: 5px solid var(--accent);">
-    <p style="margin: 0;"><strong>Excellent Institute | Computer Master Guide</strong></p>
-    <p style="font-size: 0.9rem; color: #cbd5e1; margin-top: 10px;">Educational Resources &copy; 2026 | Developed for extensive fundamental study</p>
-</footer>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // --- Menu Logic ---
+        const menuBtn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const navLinks = sidebar.querySelectorAll('a');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('open');
+            if (window.innerWidth < 1024) {
+                overlay.classList.toggle('show');
+            }
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        closeBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+
+        // Auto close menu on mobile when a link is clicked
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) {
+                    toggleMenu();
+                }
+            });
+        });
+
+        // Ensure sidebar is open on large screens by default
+        if (window.innerWidth >= 1024) {
+            sidebar.classList.add('open');
+        }
+
+        // --- Drag to Scroll Logic ---
         let isDown = false;
         let startY;
         let scrollTop;
 
-        // Prevent native browser image drag (which causes the "moving image" issue)
+        // Prevent native browser image drag
         window.addEventListener('dragstart', (e) => {
             if (e.target.tagName.toLowerCase() === 'img') {
                 e.preventDefault();
             }
         });
 
-        // Apply drag functionality to the whole document window
         window.addEventListener('mousedown', (e) => {
             const targetTag = e.target.tagName.toLowerCase();
             
-            // Allow dragging over images by removing 'img' from the ignore list 
-            // and explicitly bypassing the .no-print ignore for images.
-            if(['a', 'button', 'code'].includes(targetTag) || (e.target.closest('.no-print') && targetTag !== 'img')) {
+            // Ignore drags on links, buttons, code blocks, inside the sidebar, or on no-print elements (except images)
+            if(['a', 'button', 'code'].includes(targetTag) || e.target.closest('#sidebar') || (e.target.closest('.no-print') && targetTag !== 'img')) {
                 return;
             }
             
             isDown = true;
-            // FIX: Use clientY instead of pageY to prevent recursive drag jumps
             startY = e.clientY;
             scrollTop = window.scrollY || document.documentElement.scrollTop;
         });
 
-        window.addEventListener('mouseleave', () => {
-            isDown = false;
-        });
-
-        window.addEventListener('mouseup', () => {
-            isDown = false;
-        });
+        window.addEventListener('mouseleave', () => { isDown = false; });
+        window.addEventListener('mouseup', () => { isDown = false; });
 
         window.addEventListener('mousemove', (e) => {
             if (!isDown) return;
-            e.preventDefault(); // Prevents standard text selection while actively dragging the page
-            
-            // FIX: Use clientY instead of pageY
+            e.preventDefault(); 
             const y = e.clientY;
-            const walk = (y - startY) * 1.5; // Scroll speed multiplier
+            const walk = (y - startY) * 1.5; 
             window.scrollTo(0, scrollTop - walk);
         });
     });
